@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Rudra Kalyan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Rudra Kalyan: ECE undergrad at NIT Warangal building machine learning systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: "bringing light to dark" — dark lab-bench ground, amber light as the single accent.
+   Hero = live low-light enhancement demo; projects hold a live Dijkstra graph. Everything else stays quiet. */
+:root {
+  --bg: #0E1020;
+  --surface: #161931;
+  --surface-2: #1D2140;
+  --line: #2A2E50;
+  --fg: #E9EAF4;
+  --muted: #9C9FBC;
+  --accent: #F5B54A;
+  --accent-ink: #1C1300;
+  --cool: #8A97FF;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.75rem;
+  --step-3: clamp(2rem, 4vw, 2.75rem);
+  --step-4: clamp(3rem, 8vw, 5.5rem);
+  --radius: 10px;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #F3F4F9; --surface: #FFFFFF; --surface-2: #E9EBF4; --line: #D6D9E8;
+    --fg: #15172B; --muted: #565A78; --accent: #A55F00; --accent-ink: #FFFFFF; --cool: #3A48CC;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #F3F4F9; --surface: #FFFFFF; --surface-2: #E9EBF4; --line: #D6D9E8;
+  --fg: #15172B; --muted: #565A78; --accent: #A55F00; --accent-ink: #FFFFFF; --cool: #3A48CC;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg);
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.wrap {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Nav */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; text-decoration: none; letter-spacing: -0.01em; }
+.brand span { color: var(--accent); }
+.nav ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; font-size: var(--step--1); }
+.nav ul a { text-decoration: none; color: var(--muted); }
+.nav ul a:hover { color: var(--fg); }
+@media (max-width: 640px) { .nav ul li.hide-sm { display: none; } .nav ul { gap: 16px; } }
+
+/* Shared type */
+.eyebrow {
+  font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--accent); margin: 0;
+}
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+h2 { font-size: var(--step-3); font-weight: 700; line-height: 1.1; }
+h3 { font-size: var(--step-1); font-weight: 700; line-height: 1.25; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--font-mono); }
+
+section { padding-block: clamp(56px, 9vw, 104px); border-top: 1px solid var(--line); }
+.section-head { display: grid; gap: 10px; margin-bottom: 40px; max-width: 60ch; }
+
+/* Hero */
+.hero { border-top: 0; padding-block: clamp(40px, 7vw, 80px) clamp(56px, 8vw, 96px); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: clamp(32px, 5vw, 64px); align-items: center; }
+@media (max-width: 880px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } }
+.hero-text { display: grid; gap: 22px; min-width: 0; }
+.hero h1 { font-size: var(--step-4); font-weight: 800; line-height: 0.92; letter-spacing: -0.045em; }
+.hero h1 .lit {
+  color: var(--accent);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.lede { font-size: 1.125rem; max-width: 46ch; color: var(--muted); }
+.lede strong { color: var(--fg); font-weight: 600; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 600 0.9375rem var(--font-body); padding: 11px 18px; border-radius: 999px;
+  border: 1px solid var(--line); background: transparent; color: var(--fg);
+  text-decoration: none; cursor: pointer; transition: border-color .2s, background .2s;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: color-mix(in srgb, var(--accent) 88%, var(--fg)); }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+.facts span::before { content: "▸ "; color: var(--accent); }
+
+/* Enhancement lab */
+.lab {
+  min-width: 0; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 14px; padding: 14px; display: grid; gap: 12px;
+  box-shadow: 0 30px 80px -40px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.lab-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+.lab-bar .dots { display: flex; gap: 6px; }
+.lab-bar .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); display: block; }
+#enh {
+  display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 10; height: auto;
+  border-radius: 8px; cursor: ew-resize; touch-action: pan-y; background: #05060c;
+}
+.controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+@media (max-width: 460px) { .controls { grid-template-columns: minmax(0, 1fr); } }
+.ctl { display: grid; gap: 4px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+.ctl label { display: flex; justify-content: space-between; }
+.ctl output { color: var(--accent); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.formula {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted);
+  border-top: 1px dashed var(--line); padding-top: 10px; line-height: 1.55;
+}
+.formula b { color: var(--fg); font-weight: 600; }
+
+/* About */
+.about-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); }
+@media (max-width: 820px) { .about-grid { grid-template-columns: minmax(0, 1fr); } }
+.about-copy { display: grid; gap: 16px; max-width: 62ch; font-size: 1.0625rem; }
+.edu { display: grid; gap: 14px; align-content: start; }
+.edu-item { border-left: 2px solid var(--line); padding-left: 16px; display: grid; gap: 4px; }
+.edu-item .when { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+.edu-item .gpa { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); }
+
+/* Experience */
+.xp { display: grid; gap: 20px; }
+.job {
+  display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px;
+  padding-block: 24px; border-bottom: 1px solid var(--line);
+}
+.job:last-child { border-bottom: 0; }
+@media (max-width: 700px) { .job { grid-template-columns: minmax(0, 1fr); gap: 10px; } }
+.job .when { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); display: grid; gap: 2px; align-content: start; }
+.job-body { display: grid; gap: 12px; min-width: 0; }
+.job-body .role { color: var(--muted); font-size: 0.95rem; }
+.job ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted); }
+.job ul strong { color: var(--fg); font-weight: 600; }
+.metric {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 18px; width: fit-content; max-width: 100%;
+}
+.metric .from { font-family: var(--font-display); font-size: var(--step-2); font-weight: 700; color: var(--muted); text-decoration: line-through; text-decoration-thickness: 2px; }
+.metric .to { font-family: var(--font-display); font-size: var(--step-2); font-weight: 800; color: var(--accent); }
+.metric .cap { font-size: 0.85rem; color: var(--muted); flex-basis: 100%; }
+
+/* Projects */
+.projects { display: grid; gap: 22px; }
+.proj {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: clamp(20px, 3vw, 28px); display: grid; gap: 16px; min-width: 0;
+}
+.proj-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; align-items: baseline; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  font-family: var(--font-mono); font-size: 0.72rem; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--muted); background: var(--surface-2);
+}
+.proj p { color: var(--muted); max-width: 70ch; }
+.proj-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 820px) { .proj-row { grid-template-columns: minmax(0, 1fr); } }
+.proj.feature { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr); align-items: start; gap: 28px; }
+@media (max-width: 880px) { .proj.feature { grid-template-columns: minmax(0, 1fr); } }
+.proj-info { display: grid; gap: 14px; min-width: 0; }
+.bullets { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
+
+/* Dijkstra demo */
+.graph-box { min-width: 0; display: grid; gap: 10px; }
+#graph { width: 100%; height: auto; display: block; background: var(--surface-2); border-radius: 10px; }
+#graph .edge { stroke: var(--line); stroke-width: 2; transition: stroke .3s, stroke-width .3s; }
+#graph .edge.path { stroke: var(--accent); stroke-width: 4; }
+#graph .w { font: 600 11px var(--font-mono); fill: var(--muted); }
+#graph .w-bg { fill: var(--surface-2); }
+#graph .node { cursor: pointer; }
+#graph .node circle { fill: var(--surface); stroke: var(--line); stroke-width: 2; transition: fill .25s, stroke .25s; }
+#graph .node.visited circle { stroke: var(--cool); fill: color-mix(in srgb, var(--cool) 22%, var(--surface)); }
+#graph .node.onpath circle { stroke: var(--accent); fill: color-mix(in srgb, var(--accent) 25%, var(--surface)); }
+#graph .node.src circle, #graph .node.dst circle { fill: var(--accent); stroke: var(--accent); }
+#graph .node:hover circle { stroke: var(--accent); }
+#graph .node:focus { outline: none; }
+#graph .node:focus-visible circle { stroke: var(--fg); stroke-width: 3; }
+#graph .code { font: 600 9px var(--font-mono); fill: var(--fg); text-anchor: middle; pointer-events: none; }
+#graph .node.src .code, #graph .node.dst .code { fill: var(--accent-ink); }
+#graph .label { font: 500 11px var(--font-body); fill: var(--muted); text-anchor: middle; pointer-events: none; }
+.graph-status {
+  font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted);
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px;
+}
+.graph-status b { color: var(--accent); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.75rem; color: var(--muted); font-family: var(--font-mono); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+
+/* Paper */
+.paper { display: grid; gap: 14px; }
+.paper .venue { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.paper .venue b { color: var(--accent); font-weight: 600; }
+.arch { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-family: var(--font-mono); font-size: 0.75rem; }
+.arch span { padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); }
+.arch .arrow { border: 0; background: none; padding: 0; color: var(--accent); }
+
+/* Leadership + skills */
+.duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); }
+@media (max-width: 820px) { .duo { grid-template-columns: minmax(0, 1fr); } }
+.lead { display: grid; gap: 14px; align-content: start; }
+.lead .events { display: flex; flex-wrap: wrap; gap: 6px; }
+.skills { display: grid; gap: 18px; align-content: start; }
+.skill-group { display: grid; gap: 8px; }
+.skill-group h3 { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; }
+
+/* Contact */
+.contact .wrap { display: grid; gap: 22px; }
+.contact h2 { font-size: clamp(2.25rem, 6vw, 4rem); line-height: 1; }
+.email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.email {
+  font-family: var(--font-mono); font-size: clamp(1rem, 2.6vw, 1.35rem); color: var(--fg);
+  user-select: all; overflow-wrap: anywhere;
+}
+.copy-msg { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); min-height: 1.2em; }
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: var(--step--1); color: var(--muted); }
+</style>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top">rudra<span>.</span>kalyan</a>
+    <ul>
+      <li class="hide-sm"><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="top">
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="eyebrow">B.Tech ECE · NIT Warangal</p>
+        <h1>Rudra<br><span class="lit">Kalyan</span></h1>
+        <p class="lede">I build <strong>machine learning systems</strong> and the hardware they run on. Fraud detection at <strong>Wells Fargo</strong>, a published CNN that lifts images out of the dark, and shortest-path search on an FPGA.</p>
+        <div class="cta">
+          <a class="btn primary" href="#projects">See my work</a>
+          <a class="btn" href="https://github.com/rk-1144" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="btn" href="https://www.linkedin.com/in/rudra-kalyan-91238323a/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+        <div class="facts">
+          <span>IEEE paper · cited by 5</span>
+          <span>President, BDACC 2024–25</span>
+          <span>PyTorch · TensorFlow · C++</span>
+        </div>
+      </div>
+
+      <figure class="lab" style="margin:0">
+        <div class="lab-bar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>low_light_enhance.py · live</span>
+        </div>
+        <canvas id="enh" width="640" height="400" aria-label="Interactive demo: a dark night scene, split into a raw half and an enhanced half. Drag across it to move the split."></canvas>
+        <div class="controls">
+          <div class="ctl">
+            <label for="alpha"><span>curve α</span><output id="alphaOut" for="alpha">0.55</output></label>
+            <input id="alpha" type="range" min="0" max="1" step="0.01" value="0.55">
+          </div>
+          <div class="ctl">
+            <label for="iters"><span>iterations</span><output id="itersOut" for="iters">8</output></label>
+            <input id="iters" type="range" min="1" max="8" step="1" value="8">
+          </div>
+        </div>
+        <figcaption class="formula">
+          Drag across the image. Each pixel goes through <b>LE(x) = x + α·x·(1 − x)</b>, applied up to 8 times per RGB channel. That's the curve from my IEEE paper. Here α is one global value; the trained CNN predicts it per pixel.
+        </figcaption>
+      </figure>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="wrap about-grid">
+      <div class="about-copy">
+        <p class="eyebrow">About</p>
+        <h2>An electronics engineer who ended up deep in ML.</h2>
+        <p class="muted">I study Electronics and Communication Engineering at NIT Warangal, with a minor in Applied and Computational Mathematics. That mix shows up in my work: I like problems where the maths, the model and the hardware all matter.</p>
+        <p class="muted">I've automated fraud review at Wells Fargo, published research on low-light image enhancement, fine-tuned Llama models into a fashion assistant, and put Dijkstra's algorithm onto an FPGA. As president of the Big Data, Analytics and Consulting Cell, I helped hundreds of students get hands-on with ML.</p>
+      </div>
+      <div class="edu">
+        <p class="eyebrow">Education</p>
+        <div class="edu-item">
+          <h3>B.Tech, Electronics &amp; Communication Engineering</h3>
+          <span class="when">NIT Warangal · Dec 2021 – present</span>
+          <span class="muted" style="font-size:.9rem">Data Structures, Intro to AI, Python Programming, Probability Theory &amp; Stochastic Processes</span>
+          <span class="gpa">CGPA 7.62</span>
+        </div>
+        <div class="edu-item">
+          <h3>Minor, Applied &amp; Computational Mathematics</h3>
+          <span class="when">NIT Warangal · Aug 2022 – present</span>
+          <span class="muted" style="font-size:.9rem">Mathematical Foundations for ML, Statistics for Data Science, Search Methods in AI</span>
+          <span class="gpa">CGPA 7.15</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Experience</p>
+        <h2>Where I've shipped work</h2>
+      </div>
+      <div class="xp">
+        <article class="job">
+          <div class="when"><span>May – Jul 2024</span><span>Chennai, TN</span></div>
+          <div class="job-body">
+            <div><h3>Wells Fargo</h3><p class="role">Summer Intern</p></div>
+            <div class="metric">
+              <span class="from">1 day</span><span class="to">&lt; 5 min</span>
+              <span class="cap">Review time for 6,000 transactions, previously handled by 20 people</span>
+            </div>
+            <ul>
+              <li>Built the <strong>ACFTD</strong> system with a team of 5+ engineers and interns, cutting manual effort.</li>
+              <li>Automated the transaction verification process end to end.</li>
+              <li>Added <strong>confidence scores and explainability</strong> for every flagged fraud transaction, so reviewers can see why it was flagged.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="job">
+          <div class="when"><span>Dec 2022 – Mar 2023</span><span>NIT Warangal</span></div>
+          <div class="job-body">
+            <div><h3>Research Intern</h3><p class="role">Under Prof. J. Ravi Kumar</p></div>
+            <ul>
+              <li>Worked on <strong>low-light image enhancement using CNNs</strong>.</li>
+              <li>Published the work as a paper at <strong>IEEE 2nd INOCON</strong>, Bangalore. It has since been cited 5 times.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Projects &amp; research</p>
+        <h2>Things I've built</h2>
+      </div>
+
+      <div class="projects">
+        <article class="proj feature">
+          <div class="proj-info">
+            <div class="proj-head"><h3>Dijkstra's algorithm on an FPGA</h3></div>
+            <div class="tags"><span class="tag">Xilinx Vivado</span><span class="tag">Nexys 4 DDR</span><span class="tag">Digital design</span></div>
+            <p>Shortest-path routing across the NIT Warangal campus map, computed in hardware instead of software.</p>
+            <ul class="bullets">
+              <li>Each location is stored as a custom <strong>5-bit code</strong>, enough for 32 places with minimal logic.</li>
+              <li>Deployed on a Nexys 4 DDR board for real-time pathfinding.</li>
+            </ul>
+            <p class="muted" style="font-size:.88rem">Try it: click any two places on the sample graph. Blue marks the nodes Dijkstra visits; amber is the shortest path.</p>
+          </div>
+          <div class="graph-box">
+            <svg id="graph" viewBox="0 0 640 380" role="group" aria-label="Sample campus graph. Choose a start and a destination to compute the shortest path."></svg>
+            <div class="graph-status" aria-live="polite">
+              <span id="gMsg">Click a place to choose a new start.</span>
+              <span id="gCost"></span>
+            </div>
+            <div class="legend">
+              <span><i style="background:var(--accent)"></i>start / end</span>
+              <span><i style="background:var(--cool)"></i>visited</span>
+              <span>numbers = edge cost</span>
+            </div>
+          </div>
+        </article>
+
+        <div class="proj-row">
+          <article class="proj">
+            <div class="proj-head"><h3>Outfit recommendation chatbot</h3></div>
+            <div class="tags"><span class="tag">Llama</span><span class="tag">Unsloth</span><span class="tag">Fine-tuning</span><span class="tag">Hugging Face</span></div>
+            <p>A chatbot that suggests outfits based on your skin tone, eye colour and the occasion.</p>
+            <ul class="bullets">
+              <li>Fine-tuned Llama models with Unsloth on curated fashion datasets.</li>
+              <li>Deployed on Hugging Face for interactive use.</li>
+            </ul>
+          </article>
+
+          <article class="proj paper">
+            <div class="proj-head"><h3>Deep curve estimation for low-light images</h3></div>
+            <div class="venue"><span>IEEE 2nd INOCON · Bangalore · Mar 2023</span><b>Cited by 5</b></div>
+            <p>“A New Concatenated Method for Deep Curve Estimation Using Low Weight CNN for Low Light Image Enhancement.” A lightweight CNN predicts the curves that brighten each RGB channel, the same curve that powers the demo at the top of this page.</p>
+            <div class="arch" aria-label="Model pipeline">
+              <span>14 conv layers</span><span class="arrow">→</span><span>24 curve params</span><span class="arrow">→</span><span>8 iterations × RGB</span><span class="arrow">→</span><span>enhanced image</span>
+            </div>
+            <div><a class="btn" href="https://ieeexplore.ieee.org/document/10101064" target="_blank" rel="noopener">Read on IEEE Xplore ↗</a></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="leadership">
+    <div class="wrap duo">
+      <div class="lead">
+        <p class="eyebrow">Leadership</p>
+        <h2>President, BDACC</h2>
+        <p class="muted">I led the Big Data, Analytics and Consulting Cell at NIT Warangal for 2024–25, building a strong ML community on campus. We ran 4+ hands-on events, each with 100+ participants.</p>
+        <div class="events">
+          <span class="tag">Build a Bot</span><span class="tag">Kaggle competitions</span><span class="tag">PyTorch workshops</span><span class="tag">Case study contests</span>
+        </div>
+      </div>
+      <div class="skills">
+        <p class="eyebrow">Toolkit</p>
+        <div class="skill-group"><h3>Machine learning</h3><div class="tags"><span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">CNNs</span><span class="tag">LLM fine-tuning</span><span class="tag">Unsloth</span></div></div>
+        <div class="skill-group"><h3>Languages</h3><div class="tags"><span class="tag">Python</span><span class="tag">C++ (DSA)</span></div></div>
+        <div class="skill-group"><h3>Hardware &amp; tools</h3><div class="tags"><span class="tag">Xilinx Vivado</span><span class="tag">FPGA</span><span class="tag">MATLAB</span><span class="tag">Arduino IDE</span><span class="tag">LTspice</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h2>Let's build something.</h2>
+      <p class="muted" style="max-width:52ch">I'm open to ML and software engineering internships and full-time roles. Email is the fastest way to reach me.</p>
+      <div class="email-row">
+        <span class="email" id="email">rudrakalyan1144@gmail.com</span>
+        <button class="btn primary" id="copyBtn" type="button">Copy email</button>
+        <a class="btn" href="mailto:rudrakalyan1144@gmail.com">Open mail app</a>
+      </div>
+      <div class="cta">
+        <a class="btn" href="https://github.com/rk-1144" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="https://www.linkedin.com/in/rudra-kalyan-91238323a/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="btn" href="https://ieeexplore.ieee.org/document/10101064" target="_blank" rel="noopener">IEEE paper ↗</a>
+      </div>
+      <span class="copy-msg" id="copyMsg" aria-live="polite"></span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Rudra Kalyan</span>
+    <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="https://github.com/rk-1144" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/rudra-kalyan-91238323a/" target="_blank" rel="noopener">LinkedIn</a><span class="mono">LE(x) = x + αx(1 − x)</span></span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Low-light enhancement demo ---------- */
+  const cv = document.getElementById('enh');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  function paintScene(c) {
+    const sky = c.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#0d2257'); sky.addColorStop(0.5, '#3d5fae');
+    sky.addColorStop(0.78, '#e79a5c'); sky.addColorStop(1, '#f7cf93');
+    c.fillStyle = sky; c.fillRect(0, 0, W, H);
+    c.fillStyle = '#ffffff';
+    for (let i = 0; i < 90; i++) c.fillRect(rand() * W, rand() * H * 0.45, 1.6, 1.6);
+    c.fillStyle = '#fff3d2'; c.beginPath(); c.arc(508, 78, 28, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#3f5aa0'; c.beginPath(); c.arc(520, 70, 24, 0, Math.PI * 2); c.globalAlpha = 0.25; c.fill(); c.globalAlpha = 1;
+    c.fillStyle = '#34457e'; c.beginPath(); c.moveTo(0, 270);
+    for (let x = 0; x <= W; x += 10) c.lineTo(x, 250 + Math.sin(x / 70) * 22 + Math.sin(x / 23) * 6);
+    c.lineTo(W, H); c.lineTo(0, H); c.fill();
+    let x = -10;
+    while (x < W) {
+      const bw = 34 + rand() * 46, bh = 90 + rand() * 150, top = 330 - bh;
+      const shade = 30 + Math.floor(rand() * 22);
+      c.fillStyle = `rgb(${shade},${shade + 8},${shade + 32})`; c.fillRect(x, top, bw, bh);
+      for (let wy = top + 10; wy < 318; wy += 14) for (let wx = x + 6; wx < x + bw - 8; wx += 11) {
+        c.fillStyle = rand() < 0.38 ? '#ffd57e' : `rgb(${shade + 14},${shade + 22},${shade + 52})`;
+        c.fillRect(wx, wy, 6, 8);
+      }
+      x += bw + 4 + rand() * 10;
+    }
+    c.fillStyle = '#3b4150'; c.fillRect(0, 330, W, 70);
+    c.fillStyle = '#d8c27a'; for (let rx = 10; rx < W; rx += 52) c.fillRect(rx, 364, 26, 4);
+    for (let tx = 30; tx < W; tx += 120 + rand() * 60) {
+      c.fillStyle = '#5a4030'; c.fillRect(tx - 3, 300, 6, 32);
+      c.fillStyle = '#2f6b4f'; c.beginPath(); c.arc(tx, 292, 20, 0, Math.PI * 2); c.fill();
+    }
+  }
+
+  const off = document.createElement('canvas'); off.width = W; off.height = H;
+  const octx = off.getContext('2d'); paintScene(octx);
+  const bright = octx.getImageData(0, 0, W, H).data;
+  const dark = new Uint8ClampedArray(bright.length);
+  for (let i = 0; i < bright.length; i += 4) {
+    const n = (rand() - 0.5) * 5;
+    for (let k = 0; k < 3; k++) dark[i + k] = 255 * 0.13 * Math.pow(bright[i + k] / 255, 1.35) + n;
+    dark[i + 3] = 255;
+  }
+  const out = ctx.createImageData(W, H);
+  const lut = new Uint8ClampedArray(256);
+  let split = 0.42, alpha = 0.55, iters = 8, queued = false;
+
+  function buildLut() {
+    for (let v = 0; v < 256; v++) {
+      let x = v / 255;
+      for (let n = 0; n < iters; n++) x = x + alpha * x * (1 - x);
+      lut[v] = Math.round(x * 255);
+    }
+  }
+  function render() {
+    queued = false;
+    const sx = Math.round(split * W), o = out.data;
+    for (let y = 0; y < H; y++) {
+      let i = y * W * 4;
+      for (let x = 0; x < W; x++, i += 4) {
+        if (x < sx) { o[i] = dark[i]; o[i + 1] = dark[i + 1]; o[i + 2] = dark[i + 2]; }
+        else { o[i] = lut[dark[i]]; o[i + 1] = lut[dark[i + 1]]; o[i + 2] = lut[dark[i + 2]]; }
+        o[i + 3] = 255;
+      }
+    }
+    ctx.putImageData(out, 0, 0);
+    ctx.fillStyle = '#F5B54A'; ctx.fillRect(sx - 1, 0, 2, H);
+    ctx.beginPath(); ctx.arc(sx, H / 2, 13, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#1C1300'; ctx.font = '600 12px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center'; ctx.fillText('⇆', sx, H / 2 + 4);
+    ctx.font = '600 11px "JetBrains Mono", monospace';
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.textAlign = 'left';
+    if (sx > 70) ctx.fillText('RAW', 12, 22);
+    ctx.textAlign = 'right';
+    if (sx < W - 100) ctx.fillText('ENHANCED', W - 12, 22);
+  }
+  const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(render); } };
+
+  const setSplit = (e) => {
+    const r = cv.getBoundingClientRect();
+    split = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); schedule();
+  };
+  let dragging = false;
+  cv.addEventListener('pointerdown', (e) => { dragging = true; cv.setPointerCapture(e.pointerId); setSplit(e); });
+  cv.addEventListener('pointermove', (e) => { if (dragging || e.pointerType === 'mouse') setSplit(e); });
+  cv.addEventListener('pointerup', () => { dragging = false; });
+  cv.tabIndex = 0;
+  cv.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { split = Math.max(0, split - 0.05); schedule(); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { split = Math.min(1, split + 0.05); schedule(); e.preventDefault(); }
+  });
+  const aIn = document.getElementById('alpha'), iIn = document.getElementById('iters');
+  aIn.addEventListener('input', () => { alpha = +aIn.value; document.getElementById('alphaOut').textContent = alpha.toFixed(2); buildLut(); schedule(); });
+  iIn.addEventListener('input', () => { iters = +iIn.value; document.getElementById('itersOut').textContent = iters; buildLut(); schedule(); });
+  buildLut(); render();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  if (!reduceMotion) {
+    const t0 = performance.now();
+    const intro = (t) => {
+      if (dragging) return;
+      const p = Math.min(1, (t - t0) / 1600), ease = 1 - Math.pow(1 - p, 3);
+      split = 0.92 - ease * 0.5; render();
+      if (p < 1) requestAnimationFrame(intro);
+    };
+    requestAnimationFrame(intro);
+  }
+
+  /* ---------- Dijkstra demo ---------- */
+  const nodes = [
+    { n: 'Main Gate', x: 70, y: 310 }, { n: 'Admin Block', x: 190, y: 240 },
+    { n: 'Library', x: 320, y: 175 }, { n: 'ECE Dept', x: 455, y: 95 },
+    { n: 'CSE Dept', x: 320, y: 315 }, { n: 'Auditorium', x: 455, y: 245 },
+    { n: 'Canteen', x: 200, y: 85 }, { n: 'Hostels', x: 575, y: 170 },
+    { n: 'Sports Ground', x: 570, y: 320 }, { n: 'Lake', x: 70, y: 140 }
+  ];
+  const edges = [[0,1,4],[0,9,7],[1,9,5],[1,2,5],[1,4,4],[9,6,4],[6,2,5],[6,3,9],[2,3,5],[2,5,6],[4,5,5],[4,8,9],[3,7,5],[5,7,4],[5,8,4],[7,8,5]];
+  const svg = document.getElementById('graph');
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs, parent) => { const el = document.createElementNS(NS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); parent.appendChild(el); return el; };
+  const edgeEls = edges.map(([a, b, w]) => {
+    const A = nodes[a], B = nodes[b];
+    const line = mk('line', { x1: A.x, y1: A.y, x2: B.x, y2: B.y, class: 'edge' }, svg);
+    const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
+    mk('rect', { x: mx - 9, y: my - 8, width: 18, height: 16, rx: 4, class: 'w-bg' }, svg);
+    const t = mk('text', { x: mx, y: my + 4, 'text-anchor': 'middle', class: 'w' }, svg); t.textContent = w;
+    return line;
+  });
+  const nodeEls = nodes.map((nd, i) => {
+    const g = mk('g', { class: 'node', tabindex: 0, role: 'button', 'aria-label': nd.n }, svg);
+    mk('circle', { cx: nd.x, cy: nd.y, r: 21 }, g);
+    const c = mk('text', { x: nd.x, y: nd.y + 3, class: 'code' }, g); c.textContent = i.toString(2).padStart(5, '0');
+    const below = nd.y < 340;
+    const l = mk('text', { x: nd.x, y: below ? nd.y + 38 : nd.y - 30, class: 'label' }, g); l.textContent = nd.n;
+    g.addEventListener('click', () => pick(i));
+    g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(i); } });
+    return g;
+  });
+
+  function dijkstra(s, t) {
+    const dist = nodes.map(() => Infinity), prev = nodes.map(() => -1), done = nodes.map(() => false), order = [];
+    dist[s] = 0;
+    for (;;) {
+      let u = -1;
+      for (let i = 0; i < nodes.length; i++) if (!done[i] && dist[i] < Infinity && (u < 0 || dist[i] < dist[u])) u = i;
+      if (u < 0) break;
+      done[u] = true; order.push(u);
+      if (u === t) break;
+      edges.forEach(([a, b, w]) => {
+        const v = a === u ? b : b === u ? a : -1;
+        if (v >= 0 && !done[v] && dist[u] + w < dist[v]) { dist[v] = dist[u] + w; prev[v] = u; }
+      });
+    }
+    const path = []; for (let v = t; v !== -1; v = prev[v]) path.unshift(v);
+    return { order, path, cost: dist[t] };
+  }
+
+  let src = 0, dst = 7, picking = 'src', timers = [];
+  const msg = document.getElementById('gMsg'), costEl = document.getElementById('gCost');
+  function clearGraph() {
+    timers.forEach(clearTimeout); timers = [];
+    nodeEls.forEach((g) => g.classList.remove('visited', 'onpath', 'src', 'dst'));
+    edgeEls.forEach((e) => e.classList.remove('path'));
+    costEl.textContent = '';
+  }
+  function run(animate) {
+    clearGraph();
+    nodeEls[src].classList.add('src'); nodeEls[dst].classList.add('dst');
+    const { order, path, cost } = dijkstra(src, dst);
+    const step = animate && !reduceMotion ? 220 : 0;
+    order.forEach((u, k) => timers.push(setTimeout(() => nodeEls[u].classList.add('visited'), k * step)));
+    timers.push(setTimeout(() => {
+      for (let k = 0; k < path.length - 1; k++) {
+        const a = path[k], b = path[k + 1];
+        const idx = edges.findIndex(([x, y]) => (x === a && y === b) || (x === b && y === a));
+        edgeEls[idx].classList.add('path');
+        nodeEls[a].classList.add('onpath'); nodeEls[b].classList.add('onpath');
+      }
+      msg.innerHTML = `${nodes[src].n} → ${nodes[dst].n}. Click a place to choose a new start.`;
+      costEl.innerHTML = `cost <b>${cost}</b> · visited <b>${order.length}</b>/${nodes.length}`;
+    }, order.length * step));
+  }
+  function pick(i) {
+    if (picking === 'src') {
+      clearGraph(); src = i; nodeEls[i].classList.add('src');
+      msg.textContent = `Start: ${nodes[i].n}. Now pick a destination.`; picking = 'dst';
+    } else {
+      if (i === src) return;
+      dst = i; picking = 'src'; run(true);
+    }
+  }
+  run(false);
+
+  /* ---------- Copy email ---------- */
+  const copyBtn = document.getElementById('copyBtn'), copyMsg = document.getElementById('copyMsg');
+  copyBtn.addEventListener('click', () => {
+    const text = document.getElementById('email').textContent;
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents(document.getElementById('email'));
+      const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      copyMsg.textContent = 'Email selected. Press Ctrl+C to copy it.';
+    };
+    try {
+      navigator.clipboard.writeText(text).then(() => { copyMsg.textContent = 'Copied to clipboard.'; }, fallback);
+    } catch (e) { fallback(); }
+  });
+})();
+</script>
+
+</body>
+</html>
